@@ -1,5 +1,15 @@
 node_modules/
 *.tgz
+skills-lock.json
+.agents/skills/*
+!.agents/skills/baml-master/
+!.agents/skills/baml-master/**
+!.agents/skills/design-system/
+!.agents/skills/design-system/**
+!.agents/skills/pitfalls/
+!.agents/skills/pitfalls/**
+!.agents/skills/trpc-endpoint/
+!.agents/skills/trpc-endpoint/**
 .DS_Store
 .env
 .env.*
