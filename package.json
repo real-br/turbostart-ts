@@ -1,0 +1,35 @@
+{
+  "name": "turbostart-ts",
+  "version": "1.0.0",
+  "private": false,
+  "description": "Bootstrap a Turbostart project with agent instructions, skills, and a base scaffold handoff.",
+  "type": "module",
+  "bin": {
+    "turbostart-ts": "./bin/turbostart-ts.mjs"
+  },
+  "scripts": {
+    "start": "node ./bin/turbostart-ts.mjs",
+    "check": "node --check ./bin/turbostart-ts.mjs"
+  },
+  "dependencies": {
+    "@clack/prompts": "^0.10.0",
+    "commander": "^13.0.0",
+    "execa": "^9.0.0",
+    "picocolors": "^1.1.0"
+  },
+  "files": [
+    "bin/",
+    "README.md",
+    "AGENTS.md",
+    ".agents/skills/baml-master/",
+    ".agents/skills/design-system/",
+    ".agents/skills/pitfalls/",
+    ".agents/skills/trpc-endpoint/",
+    ".pi/prompts/",
+    "docs/design-system/",
+    "scripts/install-agent-skills.sh"
+  ],
+  "engines": {
+    "node": ">=20"
+  }
+}
