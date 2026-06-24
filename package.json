@@ -28,7 +28,6 @@
     ".agents/skills/trpc-endpoint/",
     ".agents/skills/tdd-turbostart/",
     ".pi/agents/reviewer.md",
-    ".pi/prompts/",
     "docs/design-system/",
     "scripts/install-agent-skills.sh"
   ],

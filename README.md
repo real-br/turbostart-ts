@@ -1,6 +1,6 @@
 # turbostart-ts
 
-Bootstrap a Turbostart project with the repo agent guide, custom skills, workflow prompts, third-party skill installer, an interactive base scaffold handoff, and a final Pi preparation prompt.
+Bootstrap a Turbostart project with the repo agent guide, custom skills, a third-party skill installer, an interactive base scaffold handoff, and a final Pi preparation prompt.
 
 ## Usage
 
@@ -29,11 +29,11 @@ bun run start my-app
 
 1. Creates the project folder.
 2. Creates an external Obsidian vault at `~/Obsidian/<project-name>/plans` for build plan files.
-3. Copies `AGENTS.md`, `.pi/prompts`, `.pi/agents/reviewer.md`, design-system docs, custom skills (`baml-master`, `build`, `design-system`, `pitfalls`, `tdd-turbostart`, `trpc-endpoint`), and a temporary `scripts/install-agent-skills.sh`.
+3. Copies `AGENTS.md`, `.pi/agents/reviewer.md`, design-system docs, custom skills (`baml-master`, `build`, `design-system`, `pitfalls`, `tdd-turbostart`, `trpc-endpoint`), and a temporary `scripts/install-agent-skills.sh`.
 4. Optionally runs the online third-party skill installer, then removes the temporary installer script.
 5. Optionally starts the base scaffold in the new folder so the user can complete its prompts manually.
 6. If the scaffold generated `start-database.sh`, optionally starts and verifies local Postgres before the Pi handoff, then runs `db:push`. If `localhost:5432` is already in use, Turbostart picks the next free port and updates `.env`.
-7. Adds `.agents/skills/` and `.pi/prompts/` to the generated app's `.gitignore`.
+7. Adds `.agents/skills/` to the generated app's `.gitignore`.
 8. Launches Pi with a preparation prompt that includes shadcn migration plus default Vitest, Testing Library, and Playwright setup.
 
 ## Options

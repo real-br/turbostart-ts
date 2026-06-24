@@ -46,12 +46,11 @@ const customSkillNames = [
   "tdd-turbostart",
   "trpc-endpoint",
 ];
-const agentGitignoreEntries = [".agents/skills/", ".pi/prompts/"];
+const agentGitignoreEntries = [".agents/skills/"];
 const repoPreparationPrompt =
   "Prepare this repo according to the Turbostart stack conventions, move to shadcn, set up Vitest + Testing Library + Playwright packages and test scripts, and keep .pi/agents/reviewer.md as the repo-specific review contract.";
 const assetCopies = [
   { from: "AGENTS.md", to: "AGENTS.md", label: "agent guide" },
-  { from: ".pi/prompts", to: ".pi/prompts", label: "workflow prompts" },
   {
     from: "docs/design-system",
     to: "docs/design-system",
@@ -272,7 +271,7 @@ async function ensurePlanVault(projectName) {
 
 async function copyTemplateAssets(projectPath) {
   const s = spinner();
-  s.start("Copying agent guide, prompts, installer, custom skills, and reviewer override");
+  s.start("Copying agent guide, installer, custom skills, and reviewer override");
 
   for (const asset of assetCopies) {
     await copyAsset(asset, projectPath);
@@ -357,7 +356,7 @@ async function ensureAgentResourcesIgnored(projectPath) {
       : "\n";
   const block = `${separator}\n# Turbostart agent resources\n${missingEntries.join("\n")}\n`;
   await writeFile(gitignorePath, `${currentGitignore}${block}`);
-  log.success("Gitignored agent skills and prompt templates");
+  log.success("Gitignored agent skills");
 }
 
 async function launchPiPreparationPrompt(projectPath) {
