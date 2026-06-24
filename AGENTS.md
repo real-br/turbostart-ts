@@ -111,9 +111,9 @@ Server domains are the business-logic boundary. Put reads in `queries.ts` or `se
 | Discovering/installing more skills | `find-skills` |
 | Frontend components, shadcn/ui, responsive UI | `design-system` + `shadcn` + `building-components` before editing |
 | UI/accessibility/UX review | `web-design-guidelines` |
-| React/Next.js code, performance, composition | `next-best-practices` + `vercel-react-best-practices` + `vercel-composition-patterns` |
-| Next.js cache/PPR behavior | `next-cache-components` |
-| Next.js upgrades | `next-upgrade` |
+| React/Next.js code, performance, composition | `vercel-react-best-practices` + `vercel-composition-patterns`; rely on version-matched Next.js docs/agent rules in the app |
+| Next.js cache/PPR behavior | `next-cache-components-optimizer` + `next-cache-components-adoption` |
+| Next.js upgrades | `npx @next/codemod@latest upgrade`; use the app's version-matched Next.js docs/agent rules |
 | Auth, protected routes, Clerk user/org data | `clerk-nextjs-patterns`; setup/API details: `clerk-setup`, `clerk-backend-api` |
 | Drizzle schema, migrations, query patterns | `drizzle-orm-patterns` |
 | Neon/Postgres setup or claimable databases | `claimable-postgres` |

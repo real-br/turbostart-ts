@@ -26,10 +26,9 @@ install_skills vercel-labs/agent-skills \
   deploy-to-vercel
 install_skills microsoft/playwright-cli \
   playwright-cli
-install_skills vercel-labs/next-skills \
-  next-best-practices \
-  next-cache-components \
-  next-upgrade
+install_skills vercel/next.js \
+  next-cache-components-optimizer \
+  next-cache-components-adoption
 
 install_skills vercel/ai ai-sdk
 install_skills vercel/ai-elements ai-elements
