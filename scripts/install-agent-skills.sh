@@ -24,6 +24,8 @@ install_skills vercel-labs/agent-skills \
   vercel-composition-patterns \
   web-design-guidelines \
   deploy-to-vercel
+install_skills microsoft/playwright-cli \
+  playwright-cli
 install_skills vercel-labs/next-skills \
   next-best-practices \
   next-cache-components \

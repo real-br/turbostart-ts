@@ -28,6 +28,7 @@ import {
   stat,
   writeFile,
 } from "node:fs/promises";
+import { homedir } from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -39,13 +40,15 @@ const cwd = process.cwd();
 
 const customSkillNames = [
   "baml-master",
+  "build",
   "design-system",
   "pitfalls",
+  "tdd-turbostart",
   "trpc-endpoint",
 ];
 const agentGitignoreEntries = [".agents/skills/", ".pi/prompts/"];
 const repoPreparationPrompt =
-  "Prepare this repo according to the stack conventions and move to shadcn";
+  "Prepare this repo according to the Turbostart stack conventions, move to shadcn, set up Vitest + Testing Library + Playwright packages and test scripts, and keep .pi/agents/reviewer.md as the repo-specific review contract.";
 const assetCopies = [
   { from: "AGENTS.md", to: "AGENTS.md", label: "agent guide" },
   { from: ".pi/prompts", to: ".pi/prompts", label: "workflow prompts" },
@@ -58,6 +61,11 @@ const assetCopies = [
     from: "scripts/install-agent-skills.sh",
     to: "scripts/install-agent-skills.sh",
     label: "skill installer",
+  },
+  {
+    from: ".pi/agents/reviewer.md",
+    to: ".pi/agents/reviewer.md",
+    label: "reviewer override",
   },
   ...customSkillNames.map((skillName) => ({
     from: `.agents/skills/${skillName}`,
@@ -90,7 +98,9 @@ async function main() {
   log.info(`Project folder: ${projectPath}`);
 
   await prepareProjectFolder(projectPath);
+  const planVaultPath = await ensurePlanVault(projectName);
   await copyTemplateAssets(projectPath);
+  log.info(`Plan vault: ${planVaultPath}`);
 
   const shouldInstallSkills = options.skipSkills
     ? false
@@ -250,9 +260,19 @@ async function prepareProjectFolder(projectPath) {
   }
 }
 
+async function ensurePlanVault(projectName) {
+  const vaultPath = path.join(homedir(), "Obsidian", projectName);
+  const plansPath = path.join(vaultPath, "plans");
+  const s = spinner();
+  s.start("Creating external Obsidian plan vault");
+  await mkdir(plansPath, { recursive: true });
+  s.stop("Created external Obsidian plan vault");
+  return plansPath;
+}
+
 async function copyTemplateAssets(projectPath) {
   const s = spinner();
-  s.start("Copying agent guide, prompts, installer, and custom skills");
+  s.start("Copying agent guide, prompts, installer, custom skills, and reviewer override");
 
   for (const asset of assetCopies) {
     await copyAsset(asset, projectPath);

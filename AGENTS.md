@@ -118,6 +118,7 @@ Server domains are the business-logic boundary. Put reads in `queries.ts` or `se
 | Drizzle schema, migrations, query patterns | `drizzle-orm-patterns` |
 | Neon/Postgres setup or claimable databases | `claimable-postgres` |
 | tRPC endpoints, selectors/services, Zod contracts | `trpc-endpoint` |
+| Test-driven development with Vitest/Playwright | `tdd-turbostart` |
 | BAML functions, structured LLM output | `baml-master` |
 | Vercel AI SDK agents/chat/RAG | `ai-sdk` |
 | AI chat UI components/markdown streaming | `ai-elements` + `streamdown` |
@@ -145,6 +146,65 @@ If a relevant skill exists, invoke it before making code changes in that domain.
 - For deployment failures, inspect Vercel logs before guessing.
 - Do not claim checks passed unless you ran them.
 
+## Testing & TDD Conventions
+
+Treat TDD and later verification as separate phases.
+
+TDD phase:
+- choose the smallest valid test layer;
+- write RED first;
+- make the test go GREEN with the smallest code change;
+- refactor only after GREEN.
+
+Later verification phase:
+- broader checks;
+- repo-principle review;
+- browser recordings and PR evidence when needed.
+
+### Test layer selection
+
+Choose in this order unless the behavior forces a wider boundary:
+- **Unit**: pure utilities, mappers, schema helpers, isolated component behavior.
+- **Integration**: selectors, services, tRPC procedures, route handlers, auth/data ownership, database behavior.
+- **E2E**: real user flows across browser + client + server boundaries.
+
+### Test file placement and naming
+
+Keep tests adjacent to the code that owns the behavior.
+
+- **Unit tests**: `*.test.ts` / `*.test.tsx`
+- **Integration tests**: `*.integration.test.ts` / `*.integration.test.tsx`
+- **E2E tests**: `tests/e2e/**/*.spec.ts`
+
+Examples:
+
+```txt
+src/lib/cn.test.ts
+src/features/projects/project-list.test.tsx
+src/app/(dashboard)/projects/_components/project-table.test.tsx
+src/server/projects/types.test.ts
+src/server/projects/selectors.integration.test.ts
+src/server/projects/services.integration.test.ts
+src/server/api/routers/projects.integration.test.ts
+src/app/api/webhooks/clerk.integration.test.ts
+tests/e2e/projects/create-project.spec.ts
+```
+
+Use top-level support folders only for shared test assets:
+
+```txt
+tests/helpers/
+tests/factories/
+tests/fixtures/
+```
+
+Rules:
+- Reserve `*.spec.ts` for Playwright e2e.
+- Prefer adjacent test files over a top-level `__tests__` directory.
+- Name tests by behavior.
+- A source file may have both `*.test.*` and `*.integration.test.*` only when both layers are needed.
+- During TDD, run the narrowest RED or GREEN command instead of the whole suite.
+
 ## Environment & Deployment Rules
 
 - Declare env vars in the project env schema and mirror them in `.env.example`.
@@ -164,6 +224,10 @@ bun run dev
 bun run build
 bun run lint
 bun run typecheck
+bun run test
+bun run test:watch
+bun run test:e2e
+bunx playwright install
 bun run db:generate
 bun run db:migrate
 bun run db:push
