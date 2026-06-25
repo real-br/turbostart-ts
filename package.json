@@ -24,10 +24,9 @@
     ".agents/skills/baml-master/",
     ".agents/skills/build/",
     ".agents/skills/design-system/",
-    ".agents/skills/pitfalls/",
     ".agents/skills/trpc-endpoint/",
     ".agents/skills/tdd-turbostart/",
-    ".pi/agents/reviewer.md",
+    ".pi/agents/",
     "docs/design-system/",
     "scripts/install-agent-skills.sh"
   ],
