@@ -5,7 +5,7 @@
   "description": "Bootstrap a Turbostart project with agent instructions, skills, and a base scaffold handoff.",
   "type": "module",
   "bin": {
-    "turbostart-ts": "./bin/turbostart-ts.mjs"
+    "turbostart-ts": "bin/turbostart-ts.mjs"
   },
   "scripts": {
     "start": "node ./bin/turbostart-ts.mjs",
