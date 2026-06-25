@@ -1,7 +1,6 @@
 # Turbostart Agent Guide
 
-You are working in a Turbostart repository: a Next.js product template optimized for shipping products fast with coding agents while keeping the codebase predictable for humans.
-
+You are working in a Turbostart repository: a Next.js product template optimized for shipping products fast with coding agents while keeping the human in the driving seat.
 
 ## Core Architecture
 
@@ -20,10 +19,9 @@ You are working in a Turbostart repository: a Next.js product template optimized
 | Deployment | Vercel GitHub integration, preview deployments per PR |
 
 
-
 ## Default Project Shape
 
-Use this shape unless the existing repository has already made a more specific local choice. Keep files at the lowest level that is still reusable by more than one call site.
+Use this shape for structuring the codebase:
 
 ```txt
 src/app/                               # App Router entrypoint only: pages, layouts, route handlers
@@ -97,17 +95,12 @@ Server domains are the business-logic boundary. Put reads in `queries.ts` or `se
 5. **Small functions, shallow nesting.** Max 2 levels of indentation inside a function body. If you need more, extract a helper.
 6. **Explicit over clever.** No magic. No metaprogramming. No "smart" abstractions that save 3 lines but take 10 minutes to understand. Write the obvious thing.
 7. **Name things for what they do, not how they work.** `validate_email()` not `regex_check()`. `fetch_user_profile()` not `make_api_call()`.
-7. Filter private data by authenticated Clerk user/org server-side.
-8. Commit generated artifacts with their sources: Drizzle migrations and BAML client.
-9. Do not add architecture, dependencies, env vars, or services without verification.
 
 ## Skill Routing
 
 | Work type | Use |
 | --- | --- |
-| Known repo gotchas, setup-level changes, Tailwind v4/shadcn/font foundations | `pitfalls` |
-| Planning, ambiguity, architecture decisions | `/brainstorm` |
-| Normal feature/bug implementation | `/implement` |
+| Building anything in the codebase | `/build` | 
 | Discovering/installing more skills | `find-skills` |
 | Frontend components, shadcn/ui, responsive UI | `design-system` + `shadcn` + `building-components` before editing |
 | UI/accessibility/UX review | `web-design-guidelines` |
@@ -131,79 +124,13 @@ Server domains are the business-logic boundary. Put reads in `queries.ts` or `se
 | Desktop UI inspection outside browser automation | Computer-use skill |
 | Very terse communication | Caveman skill |
 
-If a relevant skill exists, invoke it before making code changes in that domain.
 
 ## Workflow Expectations
 
-- Inspect the current code and branch before editing.
-- Do not do feature work directly on `main`.
-- Keep one branch focused on one feature/bugfix.
-- Build the first useful version quickly while preserving the repository file structure and coding principles.
+- ALWAYS use the `/build` skill to work in the codebase
 - When making database schema changes during development, immediately run `bun run db:push` against the intended development database.
 - Only create the Drizzle migration file once the feature is complete; CI/CD will pick it up during Vercel deployment.
-- Verify changes with the smallest relevant checks before reporting completion.
-- For UI work, verify in browser and capture screenshots/video when useful.
 - For deployment failures, inspect Vercel logs before guessing.
-- Do not claim checks passed unless you ran them.
-
-## Testing & TDD Conventions
-
-Treat TDD and later verification as separate phases.
-
-TDD phase:
-- choose the smallest valid test layer;
-- write RED first;
-- make the test go GREEN with the smallest code change;
-- refactor only after GREEN.
-
-Later verification phase:
-- broader checks;
-- repo-principle review;
-- browser recordings and PR evidence when needed.
-
-### Test layer selection
-
-Choose in this order unless the behavior forces a wider boundary:
-- **Unit**: pure utilities, mappers, schema helpers, isolated component behavior.
-- **Integration**: selectors, services, tRPC procedures, route handlers, auth/data ownership, database behavior.
-- **E2E**: real user flows across browser + client + server boundaries.
-
-### Test file placement and naming
-
-Keep tests adjacent to the code that owns the behavior.
-
-- **Unit tests**: `*.test.ts` / `*.test.tsx`
-- **Integration tests**: `*.integration.test.ts` / `*.integration.test.tsx`
-- **E2E tests**: `tests/e2e/**/*.spec.ts`
-
-Examples:
-
-```txt
-src/lib/cn.test.ts
-src/features/projects/project-list.test.tsx
-src/app/(dashboard)/projects/_components/project-table.test.tsx
-src/server/projects/types.test.ts
-src/server/projects/selectors.integration.test.ts
-src/server/projects/services.integration.test.ts
-src/server/api/routers/projects.integration.test.ts
-src/app/api/webhooks/clerk.integration.test.ts
-tests/e2e/projects/create-project.spec.ts
-```
-
-Use top-level support folders only for shared test assets:
-
-```txt
-tests/helpers/
-tests/factories/
-tests/fixtures/
-```
-
-Rules:
-- Reserve `*.spec.ts` for Playwright e2e.
-- Prefer adjacent test files over a top-level `__tests__` directory.
-- Name tests by behavior.
-- A source file may have both `*.test.*` and `*.integration.test.*` only when both layers are needed.
-- During TDD, run the narrowest RED or GREEN command instead of the whole suite.
 
 ## Environment & Deployment Rules
 
@@ -211,13 +138,9 @@ Rules:
 - Never expose secrets through `NEXT_PUBLIC_*`.
 - Keep local, preview, and production envs separate.
 - Neon preview branches must not run against production database URLs.
-- Drizzle migrations must target the intended database.
 - Vercel is the source of truth for preview/prod deployments and logs.
 
 ## Common Commands
-
-Use Bun for new template projects. If an existing project has `pnpm-lock.yaml` and `packageManager` set to pnpm, follow that until intentionally migrated.
-
 ```bash
 bun install
 bun run dev
@@ -231,5 +154,5 @@ bunx playwright install
 bun run db:generate
 bun run db:migrate
 bun run db:push
-bun run generate      # BAML client
+bun run generate 
 ```

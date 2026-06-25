@@ -1,11 +1,11 @@
 ---
-description: Use this skill whenever you need to build in this codebase 
-argument-hint: "<idea, problem, feature, or vague goal>"
+name: build
+description: ALWAYS use this skill when you need to build in the codebase. 
 ---
 
 # Objective
 
-The goal is to keep the user in the driving seat when building. You do this by iterating with the user and asking clarifying questions, writing a plan file and then building the plan using TDD, reviewing the output and persisting the work.
+The goal is to keep the user in the driving seat when building. You do this by iterating with the user and asking clarifying questions, writing a plan file for large features and then building the plan using TDD, reviewing the output and persisting the work.
 
 ## Workflow
 
@@ -14,41 +14,73 @@ First decide whether the request is one feature/bugfix or several independent su
 - If it contains independent sub-problems, propose a split into separate branches and worktrees. After user approval, use Orca workspaces to create the isolated environments.
 - If it is one scoped feature/bugfix, stay in one environment.
 
-Next:
+Next, classify each independent request according to its complexity.
+
+### A. Complex build workflow
+
+Use the full plan-file + TDD workflow when the request is:
+
+- a new feature;
+- ambiguous;
+- structurally significant;
+- likely to touch multiple areas;
+- likely to affect architecture, data flow, or UX behavior.
+
+### B. Simple build workflow
+
+For a small, explicit, low-risk implementations, you may skip:
+
+- the external plan file;
+- formal TDD;
+
+Examples:
+
+- a spacing/alignment fix;
+- a copy change;
+- a small styling regression;
+- a narrow conditional rendering bug.
+
+### For both workflows, always:
+
 1. Create a feature/bugfix branch.
 2. Ask the clarifying questions needed to remove ambiguity.
 3. Use research subagents to inspect the relevant codebase areas in parallel.
-4. Write the plan file. Ask the user for approval of the plan or if they want to iterate.
-5. Start a fresh Orca coding-agent session in the target workspace.
-6. Instruct the coding agent to implement the plan in single-writer using `/tdd-turbostart`.
+4. Work in a dedicated Orca workspace in you create coding agent sessions
 
-After implementation, launch subagents to:
-1. Review the changes with the repo-specific `reviewer` agent against codebase principles and fix accepted findings.
-2. Run lint & typecheck.
-3. If frontend behavior changed Use `pi-agent-browser-native` to check responsive layout and alignment, fixing issues when needed.
+### For the full build workflow, you add:
 
-Finally, persist the work to github by:
-1. Push the feature branch.
-2. Create a GitHub PR with `gh`. PR requirements:
-    - include a short summary;
-    - include the visual artifact path or link when UI changed; Visual artifact requirements:
-        - use screenshot when one image is enough;
-        - use video/recording when motion, interaction, or responsive behavior matters;
-        - attach or link the artifact from the PR body.
+1. Writing the plan file. Before building, ask the user for approval of the plan or if they want to iterate.
+2. Start a fresh Orca coding-agent session in the target workspace.
+3. Instruct the coding agent to implement the plan in single-writer using `/tdd-turbostart`.
 
+### In every environment after writing code, go through the complete review cycle with parallel subagents:
+
+1. `review-architecture` — architecture principles
+2. `review-frontend` — frontend principles
+3. `execute-tests` — full test suite green **and** Playwright visual artifacts for changed UI
+
+When all subagents are ready, final check in the main agent: typecheck, lint, build, formatting.
+
+### Finally, persist the work to GitHub:
+
+1. Push the feature branch (include `.github/pr-artifacts/` commits from `execute-tests` when UI changed).
+2. Create separate commits for logically grouped changes
+3. Create a GitHub PR with `gh`:
+   - short summary;
+   - embedded demo media from `execute-tests` repo-relative paths when UI changed.
 
 ## Managing plan files
 
-Plan files live outside version control in the external Obsidian vault for the repo.
+Plan files live outside version control in the external Obsidian vault for the repo. This vault is symlinked in the repo at `.obsidian-vault/`.
 
-Vault layout:
+### Vault layout:
 
 ```txt
 ~/Obsidian/{repo-name}/
 └── plans/
 ```
 
-Plan file naming:
+### Plan file naming:
 
 ```txt
 {YYYYMMDD}_{plan_nr}_{topic}.md
@@ -59,6 +91,11 @@ Plan file naming:
 Make the plan file very easy to judge by using Mermaid wherever useful to clarify structure, flow, or ownership.
 
 Structure each plan as:
-1. What we are doing and what we are not doing
-2. Research from the existing codebase
-3. TDD changes to make according to `tdd-turbostart`
+
+1. Implementation strategy
+2. What we are doing and what we are not doing
+3. Research from the existing codebase
+4. TDD changes to make according to `tdd-turbostart`
+5. Verification strategy
+
+Write implementation and verification strategies in the plan file.
